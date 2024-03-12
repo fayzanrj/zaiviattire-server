@@ -1,0 +1,92 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model Category {
+  id          String  @id @default(auto()) @map("_id") @db.ObjectId
+  displayName String  @unique()
+  href        String  @unique()
+  page        Boolean
+}
+
+model Product {
+  id            String           @id @default(auto()) @map("_id") @db.ObjectId
+  productId     String           @unique
+  designId      String           @unique
+  productTitle  String           @unique
+  productDesc   String
+  category      String
+  composition   String
+  gsm           String
+  washCare      String
+  price         Int
+  discount      Int
+  gender        String
+  productImages String[]
+  variants      ProductVariant[]
+  orderItem     OrderItem[]
+  createdAt     DateTime?        @default(now())
+  updatedAt     DateTime         @updatedAt
+}
+
+model ProductVariant {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  size      String
+  quantity  Int
+  color     Json
+  Product   Product   @relation(fields: [productId], references: [id])
+  productId String    @db.ObjectId
+  createdAt DateTime? @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Order {
+  id           String      @id @default(auto()) @map("_id") @db.ObjectId
+  status       String
+  orderId      String      @unique
+  shippingInfo Json
+  orderItems   OrderItem[] // Define an array of OrderItems directly inside the Order model
+  total        Int
+  trackingId   String?
+  cancelReason String?
+  createdAt    DateTime?   @default(now())
+  updatedAt    DateTime    @updatedAt
+}
+
+model OrderItem {
+  id          String  @id @default(auto()) @map("_id") @db.ObjectId
+  order       Order?  @relation(fields: [orderDBId], references: [id]) // Define the opposite relation field
+  orderDBId   String? @db.ObjectId
+  productDBId String  @db.ObjectId
+  productId   String
+  orderNumber String
+  discount    Int
+  total       Int
+  variant     Json
+  Product     Product @relation(fields: [productDBId], references: [id])
+}
+
+enum OrderStatus {
+  Processing
+  Confirmed
+  Dispatched
+  Shipped
+  Out_For_Delivery
+  Delivered
+  Cancelled
+}
+
+model User {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  username  String    @unique
+  password  String
+  role      String
+  email     String    @unique
+  createdAt DateTime? @default(now())
+  updatedAt DateTime  @updatedAt
+}

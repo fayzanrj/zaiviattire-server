@@ -1,0 +1,24 @@
+{
+  "name": "zaivi_backend",
+  "version": "1.0.0",
+  "description": "backend server for zaivi attire",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "nodemon": "nodemon index.js",
+    "build": "npx prisma generate",
+    "start": "node index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@prisma/client": "^5.10.2",
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.20.2",
+    "cloudinary": "^2.0.2",
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.2",
+    "nodemon": "^3.1.0"
+  }
+}
